@@ -191,17 +191,21 @@ class HotelsService:
         if destination_ids is None and hotel_ids is not None: 
             results = [hotel for hotel in hotels_data if hotel.id in hotel_ids] 
             return results 
-        if destination_ids is None and hotel_ids is not None: 
+        if destination_ids is None and hotel_ids is  None: 
             return hotels_data 
         
-        for i in range(len(hotel_ids)): 
-            hotel_id = hotel_ids[i] 
+        max_length = max(len(hotel_ids), len(destination_ids))
+        for i in range(max_length): 
+            hotel_id = hotel_ids[i] if i < len(hotel_ids) else None
             destination_id = destination_ids[i] if i < len(destination_ids) else None 
+
             for hotel in hotels_data: 
-                if hotel.id == hotel_id and (destination_id is None or hotel.destination_id == destination_id):
+                if (hotel_id is None or hotel.id == hotel_id) and \
+                (destination_id is None or hotel.destination_id == destination_id): 
                     results.append(hotel) 
-                    break 
-                return results
+                    break  
+
+        return results
 
 
     # def find(self, hotel_ids=None, destination_ids=None):
